@@ -1,29 +1,16 @@
 import pymongo
+import random
+from userGenerator import get_user
+
 
 client = pymongo.MongoClient(
         "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/test?retryWrites=true&w=majority")
 db = client["test"]
 users_col = db["users"]
-user = {}
-users = []
+users_set = set()
+users_arr = []
 
-for index in range(30000):
-    user["firstName"] = ""
-    user["lastName"] = ""
-    user["email"] = ""
-    user["password"] = ""
-    user["answerPassword"] = ""
-    user["phoneNumber"] = ""
-    user["yearOfBirth"] = ""
-    user["maritalStatus"] = ""
-    user["addictedStatus"] = ""
-    user["myTarget"] = ""
-    user["walletMember"] = ""
-    user["friendMember"] = ""
-    user["myWalletMembers"] = ""
-    user["myFixedExpenses"] = ""
-    user["myFixedIncomes"] = ""
-    user["passes"] = ""
-    users.append(user)
+for index in range(1, 1000):
+    users_arr.append(get_user(index))
     
-users_col.insert_many(users)
+users_col.insert_many(users_arr)
