@@ -1,13 +1,13 @@
 import pymongo
-from userGenerator import get_all_categories
+from userGenerator import get_all_items
 
 client = pymongo.MongoClient(
         "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/test?retryWrites=true&w=majority")
 db = client["test"]
-categories_col = db["categories"]
+items_col = db["items"]
 
-json = get_all_categories()
+json = get_all_items()
 
-categories_col.insert_many(json)
+items_col.insert_many(json)
 
 # categories_col.delete_many({})

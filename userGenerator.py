@@ -34,19 +34,33 @@ def get_user(user_id=0):
 
 def get_item():
 
-    all_categories = get_all_categories()
+    all_categories = get_all_items()
 
     random_category = random.randint(0, len(all_categories))
 
-    random_item = random.randint(0, len(all_categories[random_category]["items"]))
+    random_sub_category = random.randint(0, len(all_categories[random_category]["subCategory"]))
+
+    random_item = random.randint(0, len(all_categories[random_category]["subCategory"][random_sub_category]["items"]))
 
     new_item = {
         "category": all_categories[random_category]["category"],
         "cost": all_categories[random_category]["items"][random_item]["cost"],
         "necessity": all_categories[random_category]["items"][random_item]["necessity"],
-        "friendsConfirmation": number,
-        "botScore": number,
-        "confirmationStatus": number
+        "friendsConfirmation": [
+            {
+                "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
+                "confirm": False  # TODO
+            }, {
+                "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
+                "confirm": False  # TODO
+            }, {
+                "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
+                "confirm": False  # TODO
+            }
+
+        ],
+        "botScore": 100,  # TODO
+        "confirmationStatus": True  # TODO
     }
 
     return new_item
@@ -85,136 +99,376 @@ def get_req_by_user(user_id=0):
     return new_request
 
 
-def get_all_categories():
+def get_all_items():
     all_categories = [
         {
-            "category": "Fun",
-            "importance": 0.2,
-            "items": [
+            "category": "Groceries",
+            "importance": 0.6,
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "General",
+                    "importance": 0.5,
+                    "items": []
+                }, {
+                    "name": "Food & Drinks",
+                    "importance": 0.7,
+                    "items": [
+                        {
+                            "name": "Milk",
+                            "cost": 12
+                        }, {
+                            "name": "Bread",
+                            "cost": 7
+                        }, {
+                            "name": "6 Beers",
+                            "cost": 40
+                        }, {
+                            "name": "General Shopping",
+                            "cost": 265
+                        }, {
+                            "name": "Bakery",
+                            "cost": 40
+                        }, {
+                            "name": "Cornflakes",
+                            "cost": 25
+                        }, {
+                            "name": "Vegetables And Fruits",
+                            "cost": 36
+                        }, {
+                            "name": "Olive Oil",
+                            "cost": 30
+                        }, {
+                            "name": "Hot Dish",
+                            "cost": 9
+                        }
+                    ]
+                }, {
+                    "name": "Home & Clean",
+                    "importance": 0.7,
+                    "items": [
+                        {
+                            "name": "Shampoo And Soap",
+                            "cost": 18
+                        }, {
+                            "name": "Cleaning Products",
+                            "cost": 73
+                        }, {
+                            "name": "Handkerchiefs Package",
+                            "cost": 12
+                        }, {
+                            "name": "Disposable Cups",
+                            "cost": 5
+                        }, {
+                            "name": "Hygiene Products",
+                            "cost": 35
+                        }, {
+                            "name": "Tampons",
+                            "cost": 11
+                        }
+                    ]
+                }, {
+                    "name": "Medic",
+                    "importance": 0.9,
+                    "items": [
+                        {
+                            "name": "Optalgin",
+                            "cost": 32
+                        }, {
+                            "name": "Norfn",
+                            "cost": 12
+                        }, {
+                            "name": "Vautrin",
+                            "cost": 80
+                        }
+                    ]
                 }
             ]
         }, {
-            "category": "Attraction",
-            "importance": 0.2,
-            "items": [
+            "category": "Restaurants",
+            "importance": 0.4,
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "General",
+                    "importance": 0.6,
+                    "items": [
+                        {
+                            "name": "A Steakhouse",
+                            "cost": 150
+                        }, {
+                            "name": "Italian Restaurant",
+                            "cost": 90
+                        }, {
+                            "name": "Arabic Restaurant",
+                            "cost": 45
+                        }
+                    ]
                 }
             ]
         }, {
-            "category": "Activities",
-            "importance": 0.2,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Tech",
-            "importance": 0.3,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Home Design",
+            "category": "Entertainment & Sport",
             "importance": 0.5,
-            "items": [
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Food",
-            "importance": 0.8,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Drinks",
-            "importance": 0.7,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Cloths",
-            "importance": 0.7,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "General Entertainment",
+                    "importance": 0.4,
+                    "items": [
+                        {
+                            "name": "Stand Up",
+                            "cost": 90
+                        }, {
+                            "name": "Sitting At The Bar",
+                            "cost": 115
+                        }, {
+                            "name": "Snooker Game",
+                            "cost": 64
+                        }, {
+                            "name": "Party",
+                            "cost": 210
+                        }
+                    ]
+                }, {
+                    "name": "General Sport",
+                    "importance": 0.3,
+                    "items": [
+                        {
+                            "name": "Basketball Game",
+                            "cost": 68
+                        }, {
+                            "name": "Soccer Game",
+                            "cost": 84
+                        }, {
+                            "name": "Tennis Game",
+                            "cost": 34
+                        }
+                    ]
                 }
             ]
         }, {
             "category": "Fashion",
-            "importance": 0.4,
-            "items": [
+            "importance": 0.3,
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "Clothing and Footwear",
+                    "importance": 0.7,
+                    "items": [
+                        {
+                            "name": "Shirt Ransom",
+                            "cost": 350
+                        }, {
+                            "name": "Sports Shoes",
+                            "cost": 390
+                        }, {
+                            "name": "Sundress",
+                            "cost": 420
+                        }, {
+                            "name": "High Heels",
+                            "cost": 200
+                        }, {
+                            "name": "Sun Hat",
+                            "cost": 100
+                        }
+                    ]
+                }, {
+                    "name": "Fashion Accessories, Perfumes and Makeup",
+                    "importance": 0.5,
+                    "items": [
+                        {
+                            "name": "Bracelet",
+                            "cost": 120
+                        }, {
+                            "name": "Chain",
+                            "cost": 150
+                        }, {
+                            "name": "Ring",
+                            "cost": 120
+                        }, {
+                            "name": "Perfume",
+                            "cost": 350
+                        }
+                    ]
+                }, {
+                    "name": "Beauty & General Health Care",
+                    "importance": 0.4,
+                    "items": [
+                        {
+                            "name": "Mascara",
+                            "cost": 30
+                        }, {
+                            "name": "Lipstick",
+                            "cost": 12
+                        }, {
+                            "name": "Yoga Mat",
+                            "cost": 80
+                        }, {
+                            "name": "Powder",
+                            "cost": 20
+                        }, {
+                            "name": "Stick",
+                            "cost": 10
+                        }, {
+                            "name": "Face Cream",
+                            "cost": 40
+                        }, {
+                            "name": "Hand Cream",
+                            "cost": 45
+                        }
+                    ]
                 }
             ]
         }, {
-            "category": "Cosmetics",
-            "importance": 0.5,
-            "items": [
+            "category": "Gifts & Leisure",
+            "importance": 0.2,
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "Attractions",
+                    "importance": 0.3,
+                    "items": [
+                        {
+                            "name": "The Biblical Zoo",
+                            "cost": 30
+                        }, {
+                            "name": "Luna Park",
+                            "cost": 50
+                        }, {
+                            "name": "Yes Planet",
+                            "cost": 80
+                        }, {
+                            "name": "Municipal Pool",
+                            "cost": 50
+                        }, {
+                            "name": "Pack Of Coffee",
+                            "cost": 20
+                        }, {
+                            "name": "Room Escape",
+                            "cost": 150
+                        }, {
+                            "name": "Winery",
+                            "cost": 50
+                        }
+                    ]
+                }, {
+                    "name": "Gifts",
+                    "importance": 0.2,
+                    "items": [
+                        {
+                            "name": "Towel",
+                            "cost": 20
+                        }, {
+                            "name": "Greeting Card",
+                            "cost": 13
+                        }, {
+                            "name": "Football",
+                            "cost": 100
+                        }, {
+                            "name": "Set Of Pots",
+                            "cost": 200
+                        }, {
+                            "name": "Briefcase",
+                            "cost": 230
+                        }, {
+                            "name": "Watch",
+                            "cost": 800
+                        }, {
+                            "name": "Cards Abroad",
+                            "cost": 1900
+                        }, {
+                            "name": "Flowers",
+                            "cost": 200
+                        }
+                    ]
+                }, {
+                    "name": "Toys",
+                    "importance": 0.1,
+                    "items": [
+                        {
+                            "name": "Control Car",
+                            "cost": 450
+                        }, {
+                            "name": "A Barbie Doll",
+                            "cost": 200
+                        }, {
+                            "name": "Pop Doll",
+                            "cost": 50
+                        }
+                    ]
                 }
             ]
         }, {
-            "category": "Furniture",
+            "category": "Vehicle & Transportation",
+            "importance": 0.7,
+            "subCategory": [
+                {
+                    "name": "Car Expenses",
+                    "importance": 0.8,
+                    "items": [
+                        {
+                            "name": "Fuel",
+                            "cost": 250
+                        }, {
+                            "name": "Yearly Test",
+                            "cost": 120
+                        }
+                    ]
+                }, {
+                    "name": "Public Transportation",
+                    "importance": 0.8,
+                    "items": [
+                        {
+                            "name": "Traveling To Vocation",
+                            "cost": 50
+                        }, {
+                            "name": "Drive Home",
+                            "cost": 20
+                        }
+                    ]
+                }, {
+                    "name": "Taxi",
+                    "importance": 0.6,
+                    "items": [
+                        {
+                            "name": "Traveling Friend",
+                            "cost": 100
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "category": "Other",
             "importance": 0.6,
-            "items": [
+            "subCategory": [
                 {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Medical",
-            "importance": 0.9,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
-                }
-            ]
-        }, {
-            "category": "Toys",
-            "importance": 0.1,
-            "items": [
-                {
-                    "name": "",
-                    "cost": 0,
-                    "necessity": 0,
+                    "name": "Pet",
+                    "importance": 0.7,
+                    "items": [
+                        {
+                            "name": "Dog Food",
+                            "cost": 350
+                        }, {
+                            "name": "Vaccinations",
+                            "cost": 80
+                        }, {
+                            "name": "Dog Toys",
+                            "cost": 210
+                        }, {
+                            "name": "Aquarium",
+                            "cost": 1000
+                        }
+                    ]
+                }, {
+                    "name": "Baby",
+                    "importance": 0.8,
+                    "items": [
+                        {
+                            "name": "Diapers",
+                            "cost": 90
+                        }, {
+                            "name": "Materna",
+                            "cost": 20
+                        }, {
+                            "name": "Gerber",
+                            "cost": 19
+                        }
+                    ]
                 }
             ]
         }
