@@ -1,11 +1,13 @@
 import datetime
 import random
+import calendar
+import copy
 
 
 def get_user(user_id=0):
     if user_id == 0:
         user_id = random.randint(1, 999)
-    
+
     new_user = {
         "firstName": "fakeFirst" + str(user_id),
         "lastName": "fakeLast" + str(user_id),
@@ -32,38 +34,57 @@ def get_user(user_id=0):
     return new_user
 
 
+# noinspection PyTypeChecker
 def get_item():
-
     all_categories = get_all_items()
 
-    random_category = random.randint(0, len(all_categories))
+    random_category_no = random.randint(0, len(all_categories) - 1)
 
-    random_sub_category = random.randint(0, len(all_categories[random_category]["subCategory"]))
+    random_sub_category_no = random.randint(0, len(all_categories[random_category_no]["subCategory"]) - 1)
 
-    random_item = random.randint(0, len(all_categories[random_category]["subCategory"][random_sub_category]["items"]))
+    if len(all_categories[random_category_no]["subCategory"][random_sub_category_no]["items"]) > 0:
 
-    new_item = {
-        "category": all_categories[random_category]["category"],
-        "cost": all_categories[random_category]["items"][random_item]["cost"],
-        "necessity": all_categories[random_category]["items"][random_item]["necessity"],
-        "friendsConfirmation": [
-            {
+        random_item_no = random.randint(0,
+                                        len(all_categories[random_category_no]["subCategory"][random_sub_category_no][
+                                                "items"]) - 1)
+
+        total_importance = (
+                                   all_categories[random_category_no]["importance"] * 2 +
+                                   all_categories[random_category_no]["subCategory"][random_sub_category_no][
+                                       "importance"]
+                           ) / 3
+
+        num_of_friends = random.randint(3, 6)
+        friends_confirmations = []
+
+        confirms_counter = 0
+
+        for i in range(num_of_friends):
+            confirm_status = True if random.random() < total_importance else False
+            friends_confirmations.append({
                 "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
-                "confirm": False  # TODO
-            }, {
-                "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
-                "confirm": False  # TODO
-            }, {
-                "email": "fake" + str(random.randint(1, 999)) + "@gmail.com",
-                "confirm": False  # TODO
-            }
+                "confirm": confirm_status
+            })
+            if confirm_status:
+                confirms_counter += 1
 
-        ],
-        "botScore": 100,  # TODO
-        "confirmationStatus": True  # TODO
-    }
+        confirms_per = confirms_counter / num_of_friends
 
-    return new_item
+        all_items = all_categories[random_category_no]["subCategory"][random_sub_category_no]["items"]
+        selected_item_cost = all_items[random_item_no]['cost']
+
+        new_item = {
+            "category": all_categories[random_category_no]["category"],
+            "cost": selected_item_cost,
+            "necessity": round(total_importance, 1) * 10,
+            "friendsConfirmation": friends_confirmations,
+            "botScore": round(100 * total_importance),
+            "confirmationStatus":
+                True if random.random() < max(total_importance ** 0.3, confirms_per ** 0.3) else False
+        }
+
+        return new_item
+    return {}
 
 
 def get_req_by_user(user_id=0):
@@ -81,10 +102,13 @@ def get_req_by_user(user_id=0):
 
     new_item = get_item()
 
+    while new_item == {}:
+        new_item = get_item()
+
     new_request = {
         "email": "fake" + str(user_id) + "@gmail.com",
-        "openDate": random_date,
-        "closedDate": random_date,
+        "openDate": random_date.strftime("%d/%m/%Y"),
+        "closedDate": random_date.strftime("%d/%m/%Y"),
         "category": new_item["category"],
         "cost": new_item["cost"],
         "description": "",
@@ -97,6 +121,69 @@ def get_req_by_user(user_id=0):
     }
 
     return new_request
+
+
+def get_bot_data(users_col, requests_col):
+    all_json = []
+
+    json_structure = {
+        "monthly_goals": 0.0,
+        "item_importance": 0.0,
+        "bot_score": 0,
+        "friends_approved": 0.0,
+        "month_complete": 0.0,
+        "category_spent": 0,
+        "confirmation_status": 0
+    }
+
+    extra_data = {}
+
+    for user in users_col.find({}):
+
+        temp_json = []
+
+        for request in requests_col.find({"email": user["email"]}):
+            main_json = copy.deepcopy(json_structure)
+            main_json["category"] = request["category"]
+            main_json["item_importance"] = request["botScore"] / 100
+            main_json["bot_score"] = request["botScore"]
+            friends_counter = 0
+            for friend in request["friendsConfirmation"]:
+                if friend["confirm"]:
+                    friends_counter += 1
+            main_json["friends_approved"] = round(friends_counter / len(request["friendsConfirmation"]), 2)
+            main_json["confirmation_status"] = 1 if request["confirmationStatus"] else 0
+            main_json["month"] = int(request["openDate"][3:5])
+            main_json["month_complete"] = (
+                round(int(request["openDate"][:2]) / calendar.monthrange(2020, main_json["month"])[1], 2)
+            )
+            if main_json["month"] not in extra_data:
+                extra_data[main_json["month"]] = {}
+            if request["category"] not in extra_data[main_json["month"]]:
+                extra_data[main_json["month"]][request["category"]] = request["cost"]
+            else:
+                extra_data[main_json["month"]][request["category"]] += request["cost"]
+
+            temp_json.append(main_json)
+
+        monthly_spent = {}
+
+        for month in extra_data:
+            monthly_spent[month] = 0
+            for spent in extra_data[month].values():
+                monthly_spent[month] += spent
+
+        for temp_req in temp_json:
+            temp_req["category_spent"] = \
+                round(extra_data[temp_req["month"]][temp_req["category"]] / monthly_spent[temp_req["month"]], 2)
+            temp_req["monthly_goals"] = \
+                round((user["myTarget"] - monthly_spent[temp_req["month"]]) / user["myTarget"], 2)
+            del temp_req["category"]
+            del temp_req["month"]
+
+        all_json.append(temp_json)
+
+    return all_json
 
 
 def get_all_items():

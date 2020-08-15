@@ -10,7 +10,12 @@ users_col = db["users"]
 users_set = set()
 users_arr = []
 
-for index in range(1, 1000):
-    users_arr.append(get_user(index))
-    
-users_col.insert_many(users_arr)
+mode = 1
+
+if mode == 1:
+    for index in range(1, 1000):
+        users_arr.append(get_user(index))
+
+    users_col.insert_many(users_arr)
+else:
+    users_col.delete_many({})

@@ -1,6 +1,6 @@
 import pymongo
 import random
-from userGenerator import get_user, get_req_by_user
+from userGenerator import get_req_by_user
 
 
 client = pymongo.MongoClient(
@@ -11,8 +11,12 @@ req = {}
 users_arr = []
 requests_arr = []
 
+mode = 1
 
-for index in range(300000):
-    requests_arr.append(get_req_by_user(random.randint(1, 1000)))
+if mode == 1:
+    for index in range(30000):
+        requests_arr.append(get_req_by_user(random.randint(1, 1000)))
 
-requests_col.insert_many(requests_arr)
+    requests_col.insert_many(requests_arr)
+else:
+    requests_col.delete_many({})
