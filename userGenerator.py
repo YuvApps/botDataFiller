@@ -75,6 +75,7 @@ def get_item():
 
         new_item = {
             "category": all_categories[random_category_no]["category"],
+            "subCategory": all_categories[random_category_no]["subCategory"][random_sub_category_no]["name"],
             "cost": selected_item_cost,
             "necessity": round(total_importance, 1) * 10,
             "friendsConfirmation": friends_confirmations,
@@ -123,7 +124,7 @@ def get_req_by_user(user_id=0):
     return new_request
 
 
-def get_bot_data(users_col, requests_col):
+def get_bot_data(users_col, requests_col, begin_num, end_num):
     all_json = []
 
     json_structure = {
@@ -138,7 +139,9 @@ def get_bot_data(users_col, requests_col):
 
     extra_data = {}
 
-    for user in users_col.find({}):
+    users = users_col.find({"firstName": {"$gt": "fakeFirst" + str(begin_num), "$lte": "fakeFirst" + str(end_num)}})
+
+    for user in users:
 
         temp_json = []
 
@@ -181,7 +184,8 @@ def get_bot_data(users_col, requests_col):
             del temp_req["category"]
             del temp_req["month"]
 
-        all_json.append(temp_json)
+        all_json += temp_json
+        print("finished user:" + user["firstName"])
 
     return all_json
 

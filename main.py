@@ -1,20 +1,19 @@
-import pymongo
-from userGenerator import get_bot_data
+from users import users_creation
+from items import items_creation
+from requests import requests_creation
+from bot_data import bot_data_creation
 
 if __name__ == '__main__':
+    users_mode = 0
+    items_mode = 0
+    requests_mode = 0
+    bot_data_mode = 0
 
-    client = pymongo.MongoClient(
-        "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/test?retryWrites=true&w=majority")
-    db = client["test"]
-    bot_data_col = db["bot_data"]
-    users_col = db["users"]
-    requests_col = db["requests"]
-
-    mode = 1
-
-    if mode == 1:
-        all_json = get_bot_data(users_col, requests_col)
-
-        bot_data_col.insert_many(all_json)
-    else:
-        bot_data_col.delete_many({})
+    users_creation(users_mode)
+    print("users_creation finished in mode " + str(users_mode))
+    items_creation(items_mode)
+    print("items_creation finished in mode " + str(items_mode))
+    requests_creation(requests_mode)
+    print("requests_creation finished in mode " + str(requests_mode))
+    bot_data_creation(bot_data_mode)
+    print("bot_data_creation finished in mode " + str(bot_data_mode))
