@@ -1,12 +1,8 @@
-import pymongo
 from userGenerator import get_user
 
 
-def users_creation(mode):
+def users_creation(db, mode):
     if mode > 0:
-        client = pymongo.MongoClient(
-                "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/test?retryWrites=true&w=majority")
-        db = client["test"]
         users_col = db["users"]
         users_arr = []
 

@@ -1,4 +1,3 @@
-import datetime
 import random
 import calendar
 import copy
@@ -8,35 +7,39 @@ def get_user(user_id=0):
     if user_id == 0:
         user_id = random.randint(1, 999)
 
+    friends = []
+    for index in range(random.randint(3, 6)):
+        friends.append("fake" + str(random.randint(1, 999)) + "@gmail.com")
+
     new_user = {
         "firstName": "fakeFirst" + str(user_id),
         "lastName": "fakeLast" + str(user_id),
         "email": "fake" + str(user_id) + "@gmail.com",
         "password": "123456",
-        "answerPassword": "",
+        "answerPassword": "dad",
         "phoneNumber": "0523456790",
         "yearOfBirth": random.randint(1960, 2010),
-        "maritalStatus": random.randint(1, 5),
+        "maritalStatus": random.randint(1, 5),  # 1 - single, 2 - Married, 3 - divorcee, 4 - widow, 5 - other
         "addictedStatus": random.randint(1, 10),
         "myTarget": random.randint(1000, 68000),
         "walletMember": True,
-        "friendMember": False,
-        "myWalletMembers": [random.randint(1, 999),
-                            random.randint(1, 999),
-                            random.randint(1, 999)],
+        "friendMember": True,
+        "myWalletMembers": friends,
         "myFixedExpenses": [{"name": "Rent", "expense": random.randint(1, 10000)},
                             {"name": "Kids Schools", "expense": random.randint(1, 10000)},
                             {"name": "Car Rental", "expense": random.randint(1, 10000)}],
         "myFixedIncomes": [{"name": "Salary", "income": random.randint(8000, 36000)}],
-        "passes": random.randint(0, 5)
+        "passes": random.randint(0, 5),
+        "creditCardId": "",
+        "stripeCardId": ""
     }
 
     return new_user
 
 
 # noinspection PyTypeChecker
-def get_item():
-    all_categories = get_all_items()
+def get_item(user):
+    all_categories = get_all_categories()
 
     random_category_no = random.randint(0, len(all_categories) - 1)
 
@@ -54,7 +57,7 @@ def get_item():
                                        "importance"]
                            ) / 3
 
-        num_of_friends = random.randint(3, 6)
+        num_of_friends = len(user["myWalletMembers"])
         friends_confirmations = []
 
         confirms_counter = 0
@@ -88,29 +91,27 @@ def get_item():
     return {}
 
 
-def get_req_by_user(user_id=0):
-    if user_id == 0:
-        user_id = random.randint(1, 999)
+def get_req_by_user(user):
 
-    start_date = datetime.date(2020, 1, 1)
-    end_date = datetime.date(2020, 8, 1)
+    start_date = 1597912747202
+    end_date = 1597912833769
 
     time_between_dates = end_date - start_date
-    days_between_dates = time_between_dates.days
 
-    random_number_of_days = random.randrange(days_between_dates)
-    random_date = start_date + datetime.timedelta(days=random_number_of_days)
+    random_number_of_days = random.randrange(time_between_dates)
+    random_date = start_date + random_number_of_days
 
-    new_item = get_item()
+    new_item = get_item(user)
 
     while new_item == {}:
-        new_item = get_item()
+        new_item = get_item(user)
 
     new_request = {
-        "email": "fake" + str(user_id) + "@gmail.com",
-        "openDate": random_date.strftime("%d/%m/%Y"),
-        "closedDate": random_date.strftime("%d/%m/%Y"),
+        "email": user["email"],
+        "openDate": random_date,
+        "closedDate": random_date,
         "category": new_item["category"],
+        "subCategory": new_item["subCategory"],
         "cost": new_item["cost"],
         "description": "",
         "necessity": new_item["necessity"],
@@ -190,7 +191,335 @@ def get_bot_data(users_col, requests_col, begin_num, end_num):
     return all_json
 
 
-def get_all_items():
+def get_all_questions():
+    all_questions = [
+        {
+            "question": "How many times do you think you will use this product?",
+            "level": 3,
+            "possibleAnswers":
+                [
+                    {
+                        "answer": "It is a disposable product ..",
+                        "points": 9
+                    },
+                    {
+                        "answer": "I believe I will use it often",
+                        "points": 7
+                    },
+                    {
+                        "answer": "I believe I will use it in cases of need. Always good to have, right?",
+                        "points": 5
+                    },
+                    {
+                        "answer": "to be honest, I believe i wouldn’t use it that often",
+                        "points": 3
+                    },
+                    {
+                        "answer": "I'll use it only for special occations",
+                        "points": 2
+                    },
+                    {
+                        "answer": "I actually haven't thought about it",
+                        "points": 1
+                    }
+                ]
+        }, {
+            "question": "Rate the importance of this product compared to other products this month?",
+            "level": 3,
+            "possibleAnswers":
+                [
+                    {
+                        "answer": "it is a valauble item I'm not willing to give up on",
+                        "points": 9
+                    },
+                    {
+                        "answer": "I believe it could be one of the most important "
+                                  "things I'd buy or will buy this month",
+                        "points": 7
+                    },
+                    {
+                        "answer": "its not very imporant, but also it is not insignificant",
+                        "points": 5
+                    },
+                    {
+                        "answer": "insignificant",
+                        "points": 2
+                    }
+                ]
+        }, {
+            "question": "What is the purpose of this product?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "it is a valuable item im not willing to give up on",
+                    "points": 9
+                },
+                {
+                    "answer": "this products will improve my quality of life",
+                    "points": 7
+                },
+                {
+                    "answer": "this product will improve my distant future",
+                    "points": 5
+                },
+                {
+                    "answer": "the product will improve my near future",
+                    "points": 3
+                },
+                {
+                    "answer": "This product is only essintial for a week more or less",
+                    "points": 2
+                },
+                {
+                    "answer": "The product will be an improvement only for specific occetions",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "In two weeks from now, do you think you will  have the same desire to purchase this item?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "not relevant, using this product is essetial for the next two weeks",
+                    "points": 9
+                },
+                {
+                    "answer": "almost certain",
+                    "points": 7
+                },
+                {
+                    "answer": "Im not certain, but I do believe so",
+                    "points": 5
+                },
+                {
+                    "answer": "almost certain I won't",
+                    "points": 3
+                },
+                {
+                    "answer": "Certainly not",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "do you believe buying this product will be justified in "
+                        "case you exceed your own monthly budget?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "it is a valuable item im not willing to give up on",
+                    "points": 9
+                },
+                {
+                    "answer": "I find it necessary, therefore I do not mind overdrafting for it",
+                    "points": 7
+                },
+                {
+                    "answer": "the product is valuable, but I wouldn’t overdraft for it",
+                    "points": 5
+                },
+                {
+                    "answer": "no chance. Ill buy it only if I have enough resting money in my savings ",
+                    "points": 2
+                }
+            ]
+        }, {
+            "question": "Is this product worth an overdraft in your bank account?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "it is a valuable item im not willing to give up on",
+                    "points": 9
+                },
+                {
+                    "answer": "I find it necessary, therefore I do not mind overdrafting for it",
+                    "points": 7
+                },
+                {
+                    "answer": "the product is valuable, but I wouldn’t overdraft for it",
+                    "points": 5
+                },
+                {
+                    "answer": "no chance. Ill buy it only if I have enough resting money in my savings ",
+                    "points": 2
+                }
+            ]
+        }, {
+            "question": "What are you willing to give up for in order to buy this product?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "it is a necessary item, therefore I am willing to give what it takes to get it",
+                    "points": 9
+                },
+                {
+                    "answer": "I really want this product, and I'm willing to give up a lot for it",
+                    "points": 7
+                },
+                {
+                    "answer": "the product isnt highly important, therefore I will not give up much for it",
+                    "points": 5
+                },
+                {
+                    "answer": "the  product isnt important enough for me to invest in it",
+                    "points": 2
+                }
+            ]
+        }, {
+            "question": "Are you sure you need this product?",
+            "level": 3,
+            "possibleAnswers": [
+                {
+                    "answer": "it is a valuable item im not willing to give up on",
+                    "points": 9
+                },
+                {
+                    "answer": "its not a necessity, but I really want it",
+                    "points": 7
+                },
+                {
+                    "answer": "its not necessary, but I would enjoy having it",
+                    "points": 5
+                },
+                {
+                    "answer": "I don’t need it, and I don’t want it",
+                    "points": 2
+                }
+            ]
+        }, {
+            "_id": {
+                "$oid": "5ef3885731b1183aad0927bc"
+            },
+            "question": "If you had company with you, would you have the same confidence to buy this product?",
+            "level": 2,
+            "possibleAnswers": [
+                {
+                    "answer": "im not effected by friends that are with me when I shop",
+                    "points": 7
+                },
+                {
+                    "answer": "I believe so",
+                    "points": 6
+                },
+                {
+                    "answer": "im not certain, but I think so ",
+                    "points": 5
+                },
+                {
+                    "answer": "I might, and I might not",
+                    "points": 3
+                },
+                {
+                    "answer": "Probably not",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "When did you decide buy this product?",
+            "level": 2,
+            "possibleAnswers": [
+                {
+                    "answer": "not relavant, I must buy this item today",
+                    "points": 7
+                },
+                {
+                    "answer": "I've been thinking about it for a while",
+                    "points": 6
+                },
+                {
+                    "answer": "Ive been thinking about it in the last few days",
+                    "points": 5
+                },
+                {
+                    "answer": "I've been thinking about it all day",
+                    "points": 3
+                },
+                {
+                    "answer": "I thought about it a few minutes ago",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "Do you own a similar product already?",
+            "level": 2,
+            "possibleAnswers": [
+                {
+                    "answer": "it’s a disposable product",
+                    "points": 7
+                },
+                {
+                    "answer": "No, I don’t have any product that is similar to it",
+                    "points": 6
+                },
+                {
+                    "answer": "Yes, it’s a product from the same catefory, but its very different",
+                    "points": 5
+                },
+                {
+                    "answer": "Yes, a similar product but not as good",
+                    "points": 3
+                },
+                {
+                    "answer": "yes, an identical product",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "How will this product improve your life?",
+            "level": 2,
+            "possibleAnswers": [
+                {
+                    "answer": "it’s a necessary product, so obviously it will",
+                    "points": 7
+                },
+                {
+                    "answer": "this product will be a great upgrade in my life ",
+                    "points": 6
+                },
+                {
+                    "answer": "this product will improve my life ",
+                    "points": 5
+                },
+                {
+                    "answer": "this product will make my life a little easier",
+                    "points": 3
+                },
+                {
+                    "answer": "This product wont improve the quality of my life even a btt",
+                    "points": 1
+                }
+            ]
+        }, {
+            "question": "How much efforts are you willing to make in order to own this product?",
+            "level": 2,
+            "possibleAnswers": [
+                {
+                    "answer": "I must have it, therefore I'll doas much as I can to gei it",
+                    "points": 7
+                },
+                {
+                    "answer": "Im willing to to make a lot of effort to get it, because it is worth it",
+                    "points": 6
+                },
+                {
+                    "answer": "willing to put an effort, but not too much",
+                    "points": 5
+                },
+                {
+                    "answer": "I'm only willing to put a bit effort",
+                    "points": 3
+                },
+                {
+                    "answer": "not willing to make any effort",
+                    "points": 1
+                }
+            ]
+        }
+    ]
+
+    return all_questions
+
+
+def get_all_categories():
     all_categories = [
         {
             "category": "Groceries",

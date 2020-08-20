@@ -1,12 +1,8 @@
-import pymongo
 from userGenerator import get_bot_data
 
 
-def bot_data_creation(mode):
+def bot_data_creation(db, mode):
     if mode > 0:
-        client = pymongo.MongoClient(
-                "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/test?retryWrites=true&w=majority")
-        db = client["test"]
         bot_data_col = db["bot_data"]
         users_col = db["users"]
         requests_col = db["requests"]
