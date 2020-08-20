@@ -10,10 +10,10 @@ if __name__ == '__main__':
         "mongodb+srv://admin:admin@walllet-oykbx.mongodb.net/walletDB?retryWrites=true&w=majority")
     db = client["walletDB"]
 
-    questions_mode = 1
-    categories_mode = 1
-    users_mode = 1
-    requests_mode = 1
+    questions_mode = 0
+    categories_mode = 0
+    users_mode = 0
+    requests_mode = 0
     bot_data_mode = 1
 
     questions_creation(db, questions_mode)

@@ -9,7 +9,7 @@ def requests_creation(db, mode):
         requests_arr = []
 
         if mode == 1:
-            for index in range(30000):
+            for index in range(4000):
                 requests_arr.append(get_req_by_user(users_col.find({"firstName": "fakeFirst" +
                                                                                  str(random.randint(1, 999))})[0]))
 

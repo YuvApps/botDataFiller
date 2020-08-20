@@ -3,10 +3,10 @@ from userGenerator import get_all_questions
 
 def questions_creation(db, mode):
     if mode > 0:
-        items_col = db["items"]
+        questions_col = db["questions"]
 
         if mode == 1:
             json = get_all_questions()
-            items_col.insert_many(json)
+            questions_col.insert_many(json)
         else:
-            items_col.delete_many({})
+            questions_col.delete_many({})

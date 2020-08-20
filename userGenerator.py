@@ -1,6 +1,8 @@
 import random
 import calendar
+from datetime import datetime
 import copy
+from bson import ObjectId
 
 
 def get_user(user_id=0):
@@ -157,9 +159,10 @@ def get_bot_data(users_col, requests_col, begin_num, end_num):
                     friends_counter += 1
             main_json["friends_approved"] = round(friends_counter / len(request["friendsConfirmation"]), 2)
             main_json["confirmation_status"] = 1 if request["confirmationStatus"] else 0
-            main_json["month"] = int(request["openDate"][3:5])
+            main_json["month"] = datetime.fromtimestamp(request["openDate"] / 1000).month
             main_json["month_complete"] = (
-                round(int(request["openDate"][:2]) / calendar.monthrange(2020, main_json["month"])[1], 2)
+                round(datetime.fromtimestamp(
+                    request["openDate"] / 1000).day / calendar.monthrange(2020, main_json["month"])[1], 2)
             )
             if main_json["month"] not in extra_data:
                 extra_data[main_json["month"]] = {}
@@ -199,26 +202,32 @@ def get_all_questions():
             "possibleAnswers":
                 [
                     {
+                        "_id": ObjectId(),
                         "answer": "It is a disposable product ..",
                         "points": 9
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "I believe I will use it often",
                         "points": 7
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "I believe I will use it in cases of need. Always good to have, right?",
                         "points": 5
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "to be honest, I believe i wouldn’t use it that often",
                         "points": 3
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "I'll use it only for special occations",
                         "points": 2
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "I actually haven't thought about it",
                         "points": 1
                     }
@@ -229,19 +238,23 @@ def get_all_questions():
             "possibleAnswers":
                 [
                     {
+                        "_id": ObjectId(),
                         "answer": "it is a valauble item I'm not willing to give up on",
                         "points": 9
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "I believe it could be one of the most important "
                                   "things I'd buy or will buy this month",
                         "points": 7
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "its not very imporant, but also it is not insignificant",
                         "points": 5
                     },
                     {
+                        "_id": ObjectId(),
                         "answer": "insignificant",
                         "points": 2
                     }
@@ -251,26 +264,32 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it is a valuable item im not willing to give up on",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "this products will improve my quality of life",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "this product will improve my distant future",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "the product will improve my near future",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "This product is only essintial for a week more or less",
                     "points": 2
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "The product will be an improvement only for specific occetions",
                     "points": 1
                 }
@@ -280,22 +299,27 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "not relevant, using this product is essetial for the next two weeks",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "almost certain",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Im not certain, but I do believe so",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "almost certain I won't",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Certainly not",
                     "points": 1
                 }
@@ -306,18 +330,22 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it is a valuable item im not willing to give up on",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I find it necessary, therefore I do not mind overdrafting for it",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "the product is valuable, but I wouldn’t overdraft for it",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "no chance. Ill buy it only if I have enough resting money in my savings ",
                     "points": 2
                 }
@@ -327,18 +355,22 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it is a valuable item im not willing to give up on",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I find it necessary, therefore I do not mind overdrafting for it",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "the product is valuable, but I wouldn’t overdraft for it",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "no chance. Ill buy it only if I have enough resting money in my savings ",
                     "points": 2
                 }
@@ -348,18 +380,22 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it is a necessary item, therefore I am willing to give what it takes to get it",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I really want this product, and I'm willing to give up a lot for it",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "the product isnt highly important, therefore I will not give up much for it",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "the  product isnt important enough for me to invest in it",
                     "points": 2
                 }
@@ -369,46 +405,52 @@ def get_all_questions():
             "level": 3,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it is a valuable item im not willing to give up on",
                     "points": 9
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "its not a necessity, but I really want it",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "its not necessary, but I would enjoy having it",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I don’t need it, and I don’t want it",
                     "points": 2
                 }
             ]
         }, {
-            "_id": {
-                "$oid": "5ef3885731b1183aad0927bc"
-            },
             "question": "If you had company with you, would you have the same confidence to buy this product?",
             "level": 2,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "im not effected by friends that are with me when I shop",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I believe so",
                     "points": 6
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "im not certain, but I think so ",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I might, and I might not",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Probably not",
                     "points": 1
                 }
@@ -418,22 +460,27 @@ def get_all_questions():
             "level": 2,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "not relavant, I must buy this item today",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I've been thinking about it for a while",
                     "points": 6
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Ive been thinking about it in the last few days",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I've been thinking about it all day",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I thought about it a few minutes ago",
                     "points": 1
                 }
@@ -443,22 +490,27 @@ def get_all_questions():
             "level": 2,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it’s a disposable product",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "No, I don’t have any product that is similar to it",
                     "points": 6
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Yes, it’s a product from the same catefory, but its very different",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Yes, a similar product but not as good",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "yes, an identical product",
                     "points": 1
                 }
@@ -468,22 +520,27 @@ def get_all_questions():
             "level": 2,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "it’s a necessary product, so obviously it will",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "this product will be a great upgrade in my life ",
                     "points": 6
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "this product will improve my life ",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "this product will make my life a little easier",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "This product wont improve the quality of my life even a btt",
                     "points": 1
                 }
@@ -493,22 +550,27 @@ def get_all_questions():
             "level": 2,
             "possibleAnswers": [
                 {
+                        "_id": ObjectId(),
                     "answer": "I must have it, therefore I'll doas much as I can to gei it",
                     "points": 7
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "Im willing to to make a lot of effort to get it, because it is worth it",
                     "points": 6
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "willing to put an effort, but not too much",
                     "points": 5
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "I'm only willing to put a bit effort",
                     "points": 3
                 },
                 {
+                        "_id": ObjectId(),
                     "answer": "not willing to make any effort",
                     "points": 1
                 }
@@ -526,10 +588,12 @@ def get_all_categories():
             "importance": 0.6,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "General",
                     "importance": 0.5,
                     "items": []
                 }, {
+                    "_id": ObjectId(),
                     "name": "Food & Drinks",
                     "importance": 0.7,
                     "items": [
@@ -563,6 +627,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Home & Clean",
                     "importance": 0.7,
                     "items": [
@@ -587,6 +652,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Medic",
                     "importance": 0.9,
                     "items": [
@@ -629,6 +695,7 @@ def get_all_categories():
             "importance": 0.5,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "General Entertainment",
                     "importance": 0.4,
                     "items": [
@@ -647,6 +714,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "General Sport",
                     "importance": 0.3,
                     "items": [
@@ -668,6 +736,7 @@ def get_all_categories():
             "importance": 0.3,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "Clothing and Footwear",
                     "importance": 0.7,
                     "items": [
@@ -689,6 +758,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Fashion Accessories, Perfumes and Makeup",
                     "importance": 0.5,
                     "items": [
@@ -707,6 +777,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Beauty & General Health Care",
                     "importance": 0.4,
                     "items": [
@@ -740,6 +811,7 @@ def get_all_categories():
             "importance": 0.2,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "Attractions",
                     "importance": 0.3,
                     "items": [
@@ -767,6 +839,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Gifts",
                     "importance": 0.2,
                     "items": [
@@ -797,6 +870,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Toys",
                     "importance": 0.1,
                     "items": [
@@ -818,6 +892,7 @@ def get_all_categories():
             "importance": 0.7,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "Car Expenses",
                     "importance": 0.8,
                     "items": [
@@ -830,6 +905,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Public Transportation",
                     "importance": 0.8,
                     "items": [
@@ -842,6 +918,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Taxi",
                     "importance": 0.6,
                     "items": [
@@ -857,6 +934,7 @@ def get_all_categories():
             "importance": 0.6,
             "subCategory": [
                 {
+                    "_id": ObjectId(),
                     "name": "Pet",
                     "importance": 0.7,
                     "items": [
@@ -875,6 +953,7 @@ def get_all_categories():
                         }
                     ]
                 }, {
+                    "_id": ObjectId(),
                     "name": "Baby",
                     "importance": 0.8,
                     "items": [
